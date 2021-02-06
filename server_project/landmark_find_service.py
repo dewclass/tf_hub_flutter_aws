@@ -7,7 +7,8 @@ import numpy as np
 class LandMarkFinder:
 
     def __init__(self):
-        self.delf_module = hub.load("https://tfhub.dev/google/delf/1").signatures['default']
+        # self.delf_module = hub.load("https://tfhub.dev/google/delf/1").signatures['default']
+        pass
 
     def predict(self, image_path):
         im = Image.open(image_path)

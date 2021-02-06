@@ -29,17 +29,33 @@ def identify_landmarks():
 
 @app.route("/api/identify_objects", methods=["POST"])
 def identify_objects():
+    result_res = []
     if request.method == "POST":
         image_file = request.files["image"]
         file_name = secure_filename(filename=image_file.filename)
         file_save = f"uploads/{file_name}"
         image_file.save(file_save)
         result = object_finder.predict(file_save)
-        print(result)
+        for idx, score in enumerate(result["detection_scores"]):
+            score = score * 100
+            if score > 30:
+                entity = str(result["detection_class_entities"][idx])
+                name = str(result["detection_class_names"][idx])
+                box = result["detection_boxes"][idx]
+                box = [float(b) for b in box]
+
+                print(type(name), type(box), type(score), type(entity))
+
+                result_res.append({
+                    "name": name,
+                    "entity": entity,
+                    "box": box,
+                    "score": float(score)
+                })
 
     return {
         "status": "success",
-        "label": None
+        "result": result_res
     }
 
 
